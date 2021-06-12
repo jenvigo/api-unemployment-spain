@@ -77,9 +77,9 @@ switch ( strtoupper( $method ) ) {
 				);
 			}
 		} else {
-			echo json_encode(
-				$books
-			);
+//			echo json_encode(
+//				$books
+//			);
 		}
 
 		die;
