@@ -1,0 +1,22 @@
+{
+  "routes": [
+    {
+      "src": "/(?<type>[^/]+)/(?<id>[^/]+)",
+      "dest": "api/server.php?resource_type=$type&resource_id=$id"
+    },
+    {
+      "src": "/(?<type>[^/]+)(/)*",
+      "dest": "api/server.php?resource_type=$type"
+    },
+    {
+      "src": "/(.*)",
+      "dest": "api/server.php",
+      "status": 404
+    }
+  ],
+  "functions": {
+    "api/server.php": {
+      "runtime": "vercel-php@0.3.1"
+    }
+  }
+}

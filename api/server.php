@@ -3,6 +3,7 @@
 header( 'Content-Type: application/json' );
 
 $allowedResourceTypes = [
+	'paro',
 	'books',
 	'authors',
 	'genres',
@@ -16,7 +17,7 @@ if ( !in_array( $resourceType, $allowedResourceTypes ) ) {
 			'error' => "$resourceType is un unkown",
 		]
 	);
-	
+
 	die;
 }
 
@@ -43,7 +44,8 @@ $method = $_SERVER['REQUEST_METHOD'];
 
 switch ( strtoupper( $method ) ) {
 	case 'GET':
-		if ( "books" !== $resourceType ) {
+
+		if ( !in_array( $resourceType ,["books", "paro"]) ) {
 			http_response_code( 404 );
 
 			echo json_encode(
@@ -54,6 +56,11 @@ switch ( strtoupper( $method ) ) {
 
 			die;
 		}
+        if ($resourceType == "paro") {
+            include_once $_SERVER["DOCUMENT_ROOT"] . '/api/Paro.php';
+            $paro =  Paro::get_paro();
+            echo json_encode($paro);
+        }
 
 		if ( !empty( $resourceId ) ) {
 			if ( array_key_exists( $resourceId, $books ) ) {
@@ -76,7 +83,7 @@ switch ( strtoupper( $method ) ) {
 		}
 
 		die;
-		
+
 		break;
 	case 'POST':
 		$json = file_get_contents( 'php://input' );
@@ -88,7 +95,7 @@ switch ( strtoupper( $method ) ) {
 	case 'PUT':
 		if ( !empty($resourceId) && array_key_exists( $resourceId, $books ) ) {
 			$json = file_get_contents( 'php://input' );
-			
+
 			$books[ $resourceId ] = json_decode( $json, true );
 
 			echo $resourceId;
